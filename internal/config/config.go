@@ -5,6 +5,9 @@ type Config struct {
 	MigrationPath string
 }
 
-func LoadConfig() error {
-	return nil
+func LoadConfig() *Config {
+	return &Config{
+		PostgresURL:   "",
+		MigrationPath: "",
+	}
 }

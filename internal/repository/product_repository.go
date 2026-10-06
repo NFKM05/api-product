@@ -2,11 +2,11 @@ package repository
 
 import (
 	"context"
-	"database/sql"
 
 	"io.github.com/api-product/internal/db"
 	"io.github.com/api-product/internal/domain"
 	"io.github.com/api-product/internal/mapper"
+	"io.github.com/api-product/internal/utils"
 )
 
 type ProductRepository struct {
@@ -23,7 +23,7 @@ func (r *ProductRepository) Create(ctx context.Context, product string, quantity
 		ProductName: product,
 		Quantity:    quantity,
 		Price:       price,
-		Description: sql.NullString{},
+		Description: utils.ToNullString(&description),
 	})
 
 	if err != nil {
@@ -31,4 +31,44 @@ func (r *ProductRepository) Create(ctx context.Context, product string, quantity
 	}
 
 	return mapper.ToDomain(row), nil
+}
+
+func (r *ProductRepository) UpdateProduct(ctx context.Context, id int32, name string,
+	quantity int32, price string, description *string) (domain.Product, error) {
+	row, err := r.queries.UpdateProduct(ctx, db.UpdateProductParams{
+		ID:          id,
+		ProductName: name,
+		Quantity:    quantity,
+		Price:       price,
+		Description: utils.ToNullString(description),
+	})
+
+	if err != nil {
+		return domain.Product{}, err
+	}
+
+	return mapper.ToDomain(row), nil
+}
+
+func (r *ProductRepository) ProductById(ctx context.Context, id int32) (domain.Product, error) {
+	row, err := r.queries.ProductById(ctx, id)
+
+	if err != nil {
+		return domain.Product{}, err
+	}
+
+	return mapper.ToDomain(row), nil
+}
+
+func (r *ProductRepository) AllProducts(ctx context.Context) ([]domain.Product, error) {
+	rows, err := r.queries.ListAllProducts(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	products := make([]domain.Product, 0, len(rows))
+	for _, row := range rows {
+		products = append(products, mapper.ToDomain(row))
+	}
+	return products, nil
 }

@@ -8,6 +8,7 @@ import (
 
 type ProductRepository interface {
 	Create(ctx context.Context, product string, quantity int32, price, description string) (domain.Product, error)
+	UpdateProduct(ctx context.Context, id int32, name string)
 }
 
 type ProductService struct {
