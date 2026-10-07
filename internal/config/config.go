@@ -14,8 +14,8 @@ func LoadConfig() *Config {
 	loadEnv()
 
 	return &Config{
-		PostgresURL:   getEnv("DATABASE_URL", ""),
-		MigrationPath: getEnv("MIGRATION_PATH", ""),
+		PostgresURL:   getEnv("DATABASE_URL", "postgresql://..."),
+		MigrationPath: getEnv("MIGRATION_PATH", "./migrations"),
 	}
 }
 

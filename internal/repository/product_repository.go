@@ -72,3 +72,12 @@ func (r *ProductRepository) AllProducts(ctx context.Context) ([]domain.Product, 
 	}
 	return products, nil
 }
+
+func (r *ProductRepository) DeleteProduct(ctx context.Context, id int32) error {
+	err := r.queries.DeleteProduct(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

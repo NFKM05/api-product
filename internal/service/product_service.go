@@ -11,6 +11,7 @@ type ProductRepository interface {
 	UpdateProduct(ctx context.Context, id int32, name string, quantity int32, price string, description *string) (domain.Product, error)
 	ProductById(ctx context.Context, id int32) (domain.Product, error)
 	AllProducts(ctx context.Context) ([]domain.Product, error)
+	DeleteProduct(ctx context.Context, id int32) error
 }
 
 type ProductService struct {
@@ -35,4 +36,8 @@ func (s *ProductService) ProductById(ctx context.Context, id int32) (domain.Prod
 
 func (s *ProductService) AllProducts(ctx context.Context) ([]domain.Product, error) {
 	return s.repository.AllProducts(ctx)
+}
+
+func (s *ProductService) DeleteProduct(ctx context.Context, id int32) error {
+	return s.repository.DeleteProduct(ctx, id)
 }

@@ -131,3 +131,22 @@ func (h *ProductHandler) ListAll(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
 }
+
+func (h *ProductHandler) Delete(w http.ResponseWriter, r *http.Request) {
+	idParam := r.PathValue("id")
+	id, err := strconv.ParseInt(idParam, 10, 32)
+
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(map[string]string{
+			"error": "id nao encontrado",
+		})
+		return
+	}
+
+	product := h.service.DeleteProduct(r.Context(), int32(id))
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusNoContent)
+	json.NewEncoder(w).Encode(product)
+}
