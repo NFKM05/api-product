@@ -18,17 +18,24 @@ type CreateProductResponse struct {
 	ProductName string    `json:"product_name"`
 	Quantity    int32     `json:"quantity"`
 	Price       string    `json:"price"`
-	Description string    `json:"description,omitempty"`
+	Description *string   `json:"description,omitempty"`
 	CreatedAt   time.Time `json:"created_at"`
 }
 
-func ProductResponseToDomain(p domain.Product) CreateProductResponse {
+type UpdateProduct struct {
+	ProductName string `json:"product_name"`
+	Quantity    int32  `json:"quantity"`
+	Price       string `json:"price"`
+	Description string `json:"description,omitempty"`
+}
+
+func ProductResponseFromDomain(p domain.Product) CreateProductResponse {
 	return CreateProductResponse{
 		ID:          p.ID,
 		ProductName: p.ProductName,
 		Quantity:    p.Quantity,
 		Price:       p.Price,
-		Description: *p.Description,
+		Description: p.Description,
 		CreatedAt:   p.CreatedAt,
 	}
 }

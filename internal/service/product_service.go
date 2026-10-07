@@ -8,7 +8,9 @@ import (
 
 type ProductRepository interface {
 	Create(ctx context.Context, product string, quantity int32, price, description string) (domain.Product, error)
-	UpdateProduct(ctx context.Context, id int32, name string)
+	UpdateProduct(ctx context.Context, id int32, name string, quantity int32, price string, description *string) (domain.Product, error)
+	ProductById(ctx context.Context, id int32) (domain.Product, error)
+	AllProducts(ctx context.Context) ([]domain.Product, error)
 }
 
 type ProductService struct {
@@ -19,6 +21,18 @@ func NewProductService(repo ProductRepository) *ProductService {
 	return &ProductService{repository: repo}
 }
 
-func (s *ProductService) CreateProduct(ctx context.Context, product string, quantity int32, price, description string) (domain.Product, error) {
-	return s.repository.Create(ctx, product, quantity, price, description)
+func (s *ProductService) CreateProduct(ctx context.Context, product string, quantity int32, price string, description *string) (domain.Product, error) {
+	return s.repository.Create(ctx, product, quantity, price, *description)
+}
+
+func (s *ProductService) UpdateProduct(ctx context.Context, id int32, name string, quantity int32, price string, description *string) (domain.Product, error) {
+	return s.repository.UpdateProduct(ctx, id, name, quantity, price, description)
+}
+
+func (s *ProductService) ProductById(ctx context.Context, id int32) (domain.Product, error) {
+	return s.repository.ProductById(ctx, id)
+}
+
+func (s *ProductService) AllProducts(ctx context.Context) ([]domain.Product, error) {
+	return s.repository.AllProducts(ctx)
 }

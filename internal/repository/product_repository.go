@@ -18,12 +18,12 @@ func NewProductRepository(queries *db.Queries) *ProductRepository {
 }
 
 func (r *ProductRepository) Create(ctx context.Context, product string, quantity int32,
-	price, description string) (domain.Product, error) {
+	price string, description *string) (domain.Product, error) {
 	row, err := r.queries.CreateProduct(ctx, db.CreateProductParams{
 		ProductName: product,
 		Quantity:    quantity,
 		Price:       price,
-		Description: utils.ToNullString(&description),
+		Description: utils.ToNullString(description),
 	})
 
 	if err != nil {

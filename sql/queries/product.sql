@@ -14,3 +14,6 @@ SELECT * FROM products WHERE id=$1;
 
 -- name: ListAllProducts :many
 SELECT * FROM products ORDER BY product_name ASC;
+
+-- name: DeleteProduct :exec
+DELETE FROM products WHERE id=$1;
