@@ -6,13 +6,20 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
-type ConfigDB struct {
+type ConnectConfig struct {
+	DSN             string
+	MaxOpenConns    int
+	MaxIdleConns    int
+	ConnMaxIdle     time.Time
+	ConnMaxLifetime time.Time
+	ForceUTC        bool
 }
 
 func MigrateDatabase() error {
@@ -60,7 +67,28 @@ func CloseConnection(conn *sql.DB) error {
 	return conn.Close()
 }
 
-func OpenConnection(ctx context.Context, config ConfigDB) (*sql.DB, error) {
+func OpenConnection(ctx context.Context, config ConnectConfig) (*sql.DB, error) {
 
-	return nil, nil
+	if config.DSN == "" {
+		config.DSN = os.Getenv("DATABASE_URL")
+	}
+
+	if config.DSN == "" {
+		return nil, fmt.Errorf("Database not provided and Postgres URL not set")
+	}
+
+	if config.MaxOpenConns == 0 {
+		config.MaxOpenConns = 25
+	}
+
+	if config.MaxIdleConns == 0 {
+		config.MaxIdleConns = 25
+	}
+
+	db, err := sql.Open("postgres", config.DSN)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to connect database: %w", err)
+	}
+
+	return db, nil
 }

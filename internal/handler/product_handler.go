@@ -26,7 +26,7 @@ func (h *ProductHandler) Create(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(map[string]string{
 			"error": "body fora do formato esperado",
 		})
-		return
+		return 
 	}
 
 	product, err := h.service.CreateProduct(r.Context(), req.ProductName, req.Quantity, req.Price, &req.Description)
