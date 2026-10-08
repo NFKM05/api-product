@@ -1,12 +1,15 @@
 package config
 
 import (
+	"bufio"
 	"os"
+	"strings"
 )
 
 type Config struct {
 	PostgresURL   string
 	MigrationPath string
+	ServicePort   string
 }
 
 func LoadConfig() *Config {
@@ -16,6 +19,7 @@ func LoadConfig() *Config {
 	return &Config{
 		PostgresURL:   getEnv("DATABASE_URL", "postgresql://..."),
 		MigrationPath: getEnv("MIGRATION_PATH", "./migrations"),
+		ServicePort:   getEnv("SERVICE_PORT", "8080"),
 	}
 }
 
@@ -26,6 +30,40 @@ func loadEnv() {
 	}
 
 	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	// Scanner lê o arquivo linha por linha, sem carregar tudo na
+	// memória de uma vez.
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+
+		// Separa só no PRIMEIRO "=" (limite 2). Isso é essencial:
+		// uma DATABASE_URL tem várias "=" dentro (query params do
+		// Postgres), e SplitN com limite garante que elas fiquem
+		// intactas dentro do valor, em vez de serem cortadas.
+		parts := strings.SplitN(line, "=", 2)
+		if len(parts) != 2 {
+			continue
+		}
+
+		key := strings.TrimSpace(parts[0])
+		value := strings.TrimSpace(parts[1])
+
+		// Remove aspas duplas envolvendo o valor, se existirem.
+		// Permite escrever DATABASE_URL="postgres://..." no arquivo.
+		if strings.HasPrefix(value, `"`) && strings.HasSuffix(value, `"`) && len(value) >= 2 {
+			value = value[1 : len(value)-1]
+		}
+
+		if os.Getenv(key) == "" {
+			os.Setenv(key, value)
+		}
+	}
 
 }
 
