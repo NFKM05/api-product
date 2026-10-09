@@ -6,10 +6,6 @@ import (
 	"io.github.com/api-product/internal/handler"
 )
 
-type ProductRoute struct {
-	handler handler.ProductHandler
-}
-
 func RegisterProductRoutes(mux *http.ServeMux, h *handler.ProductHandler) {
 	mux.HandleFunc("POST /products", h.Create)
 	mux.HandleFunc("PUT /products/{id}", h.Update)

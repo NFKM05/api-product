@@ -26,7 +26,7 @@ func (h *ProductHandler) Create(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(map[string]string{
 			"error": "body fora do formato esperado",
 		})
-		return 
+		return
 	}
 
 	product, err := h.service.CreateProduct(r.Context(), req.ProductName, req.Quantity, req.Price, &req.Description)
@@ -54,6 +54,7 @@ func (h *ProductHandler) Update(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(map[string]string{
 			"error": "id não encontrado",
 		})
+		return
 	}
 
 	var req dto.UpdateProduct
@@ -78,7 +79,7 @@ func (h *ProductHandler) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusNoContent)
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(dto.ProductResponseFromDomain(product))
 }
 
@@ -145,8 +146,13 @@ func (h *ProductHandler) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	product := h.service.DeleteProduct(r.Context(), int32(id))
-	w.Header().Set("Content-Type", "application/json")
+	if err := h.service.DeleteProduct(r.Context(), int32(id)); err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]string{
+			"error": "erro ao excluir o produto",
+		})
+	}
+
 	w.WriteHeader(http.StatusNoContent)
-	json.NewEncoder(w).Encode(product)
 }
