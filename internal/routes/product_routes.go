@@ -10,14 +10,10 @@ type ProductRoute struct {
 	handler handler.ProductHandler
 }
 
-func NewRoleRoutes(route ProductRoute) http.Handler {
-	mux := http.NewServeMux()
-
-	mux.HandleFunc("POST /products", route.handler.Create)
-	mux.HandleFunc("PUT /products/{id}", route.handler.Update)
-	mux.HandleFunc("GET /products/{id}", route.handler.ProductById)
-	mux.HandleFunc("GET /products", route.handler.ListAll)
-	mux.HandleFunc("DELETE /products/{id}", route.handler.Delete)
-
-	return mux
+func RegisterProductRoutes(mux *http.ServeMux, h *handler.ProductHandler) {
+	mux.HandleFunc("POST /products", h.Create)
+	mux.HandleFunc("PUT /products/{id}", h.Update)
+	mux.HandleFunc("GET /products/{id}", h.ProductById)
+	mux.HandleFunc("GET /products", h.ListAll)
+	mux.HandleFunc("DELETE /products/{id}", h.Delete)
 }

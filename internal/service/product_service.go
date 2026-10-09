@@ -7,7 +7,7 @@ import (
 )
 
 type ProductRepository interface {
-	Create(ctx context.Context, product string, quantity int32, price, description string) (domain.Product, error)
+	Create(ctx context.Context, product string, quantity int32, price string, description *string) (domain.Product, error)
 	UpdateProduct(ctx context.Context, id int32, name string, quantity int32, price string, description *string) (domain.Product, error)
 	ProductById(ctx context.Context, id int32) (domain.Product, error)
 	AllProducts(ctx context.Context) ([]domain.Product, error)
@@ -23,7 +23,7 @@ func NewProductService(repo ProductRepository) *ProductService {
 }
 
 func (s *ProductService) CreateProduct(ctx context.Context, product string, quantity int32, price string, description *string) (domain.Product, error) {
-	return s.repository.Create(ctx, product, quantity, price, *description)
+	return s.repository.Create(ctx, product, quantity, price, description)
 }
 
 func (s *ProductService) UpdateProduct(ctx context.Context, id int32, name string, quantity int32, price string, description *string) (domain.Product, error) {

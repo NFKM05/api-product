@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/golang-migrate/migrate/v4"
@@ -17,9 +18,18 @@ type ConnectConfig struct {
 	DSN             string
 	MaxOpenConns    int
 	MaxIdleConns    int
-	ConnMaxIdle     time.Time
-	ConnMaxLifetime time.Time
+	ConnMaxIdle     time.Duration
+	ConnMaxLifetime time.Duration
 	ForceUTC        bool
+}
+
+func NewConnectConfig() ConnectConfig {
+	return ConnectConfig{
+		MaxOpenConns:    5,
+		MaxIdleConns:    5,
+		ConnMaxIdle:     10 * time.Second,
+		ConnMaxLifetime: 10 * time.Minute,
+	}
 }
 
 func MigrateDatabase() error {
@@ -38,20 +48,20 @@ func MigrateDatabase() error {
 		return fmt.Errorf("Absolute migration path is not available: %w", err)
 	}
 
+	migrationURL := "file://" + strings.ReplaceAll(absPathMigration, `\`, "/")
+
 	conn, err := sql.Open("postgres", databaseURL)
 	if err != nil {
 		return fmt.Errorf("Failed to open connection with database: %w", err)
 	}
-	defer CloseConnection(conn)
+	defer conn.Close()
 
 	driver, err := postgres.WithInstance(conn, &postgres.Config{})
 	if err != nil {
 		return fmt.Errorf("Failed to create database: %w", err)
 	}
 
-	mig, err := migrate.NewWithDatabaseInstance(
-		"file://"+absPathMigration,
-		"postgres", driver)
+	mig, err := migrate.NewWithDatabaseInstance(migrationURL, "postgres", driver)
 	if err != nil {
 		return fmt.Errorf("Failed to create migrate instance: %w", err)
 	}
@@ -61,10 +71,6 @@ func MigrateDatabase() error {
 	}
 
 	return nil
-}
-
-func CloseConnection(conn *sql.DB) error {
-	return conn.Close()
 }
 
 func OpenConnection(ctx context.Context, config ConnectConfig) (*sql.DB, error) {
@@ -88,6 +94,23 @@ func OpenConnection(ctx context.Context, config ConnectConfig) (*sql.DB, error) 
 	db, err := sql.Open("postgres", config.DSN)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to connect database: %w", err)
+	}
+
+	db.SetMaxOpenConns(config.MaxOpenConns)
+	db.SetMaxIdleConns(config.MaxIdleConns)
+	db.SetConnMaxIdleTime(config.ConnMaxIdle)
+	db.SetConnMaxLifetime(config.ConnMaxLifetime)
+
+	if err := db.PingContext(ctx); err != nil {
+		db.Close()
+		return nil, fmt.Errorf("Failed to ping database: %w", err)
+	}
+
+	if config.ForceUTC {
+		if _, err := db.ExecContext(ctx, "SET TIMEZONE='UTC'"); err != nil {
+			db.Close()
+			return nil, fmt.Errorf("Failed to set timezone: %w", err)
+		}
 	}
 
 	return db, nil
