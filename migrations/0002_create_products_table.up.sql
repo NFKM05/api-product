@@ -4,8 +4,10 @@ CREATE TABLE IF NOT EXISTS products(
     quantity INTEGER NOT NULL,
     price NUMERIC(9,2) NOT NULL,
     description VARCHAR(300),
+    user_id UUID NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
 
-    CONSTRAINT pk_products PRIMARY KEY(id)
+    CONSTRAINT pk_products PRIMARY KEY(id),
+    CONSTRAINT fk_user_products FOREIGN KEY(user_id) REFERENCES users(id)
 );

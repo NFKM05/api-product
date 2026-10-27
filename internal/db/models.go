@@ -17,6 +17,7 @@ type Product struct {
 	Quantity    int32
 	Price       string
 	Description sql.NullString
+	UserID      uuid.UUID
 	CreatedAt   time.Time
 	UpdatedAt   sql.NullTime
 }
@@ -28,11 +29,4 @@ type User struct {
 	Password   string
 	IsActive   sql.NullBool
 	InactiveDt sql.NullTime
-}
-
-type UserSession struct {
-	SessionID   int32
-	UserID      uuid.UUID
-	AccessToken string
-	ExpiresAt   int32
 }

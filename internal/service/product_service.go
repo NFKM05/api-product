@@ -22,11 +22,34 @@ func NewProductService(repo ProductRepository) *ProductService {
 	return &ProductService{repository: repo}
 }
 
+func (s *ProductService) prepare(p *domain.Product) error {
+	p.Normalize()
+	return p.Validate()
+}
+
 func (s *ProductService) CreateProduct(ctx context.Context, product string, quantity int32, price string, description *string) (domain.Product, error) {
+	prod := domain.Product{
+		ProductName: product,
+		Quantity:    quantity,
+		Price:       price,
+		Description: description,
+	}
+	if err := s.prepare(&prod); err != nil {
+		return domain.Product{}, err
+	}
 	return s.repository.Create(ctx, product, quantity, price, description)
 }
 
 func (s *ProductService) UpdateProduct(ctx context.Context, id int32, name string, quantity int32, price string, description *string) (domain.Product, error) {
+	prod := domain.Product{
+		ProductName: name,
+		Quantity:    quantity,
+		Price:       price,
+		Description: description,
+	}
+	if err := s.prepare(&prod); err != nil {
+		return domain.Product{}, err
+	}
 	return s.repository.UpdateProduct(ctx, id, name, quantity, price, description)
 }
 
