@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"io.github.com/api-product/internal/db"
 	"io.github.com/api-product/internal/domain"
 	"io.github.com/api-product/internal/mapper"
@@ -18,19 +19,20 @@ func NewProductRepository(queries *db.Queries) *ProductRepository {
 }
 
 func (r *ProductRepository) Create(ctx context.Context, product string, quantity int32,
-	price string, description *string) (domain.Product, error) {
+	price string, description *string, userID uuid.UUID) (domain.Product, error) {
 	row, err := r.queries.CreateProduct(ctx, db.CreateProductParams{
 		ProductName: product,
 		Quantity:    quantity,
 		Price:       price,
 		Description: utils.ToNullString(description),
+		UserID:      userID,
 	})
 
 	if err != nil {
 		return domain.Product{}, err
 	}
 
-	return mapper.ToDomain(row), nil
+	return mapper.ToDomainProduct(row), nil
 }
 
 func (r *ProductRepository) UpdateProduct(ctx context.Context, id int32, name string,
@@ -47,7 +49,7 @@ func (r *ProductRepository) UpdateProduct(ctx context.Context, id int32, name st
 		return domain.Product{}, err
 	}
 
-	return mapper.ToDomain(row), nil
+	return mapper.ToDomainProduct(row), nil
 }
 
 func (r *ProductRepository) ProductById(ctx context.Context, id int32) (domain.Product, error) {
@@ -57,7 +59,7 @@ func (r *ProductRepository) ProductById(ctx context.Context, id int32) (domain.P
 		return domain.Product{}, err
 	}
 
-	return mapper.ToDomain(row), nil
+	return mapper.ToDomainProduct(row), nil
 }
 
 func (r *ProductRepository) AllProducts(ctx context.Context) ([]domain.Product, error) {
@@ -68,7 +70,7 @@ func (r *ProductRepository) AllProducts(ctx context.Context) ([]domain.Product, 
 
 	products := make([]domain.Product, 0, len(rows))
 	for _, row := range rows {
-		products = append(products, mapper.ToDomain(row))
+		products = append(products, mapper.ToDomainProduct(row))
 	}
 	return products, nil
 }

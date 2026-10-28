@@ -15,6 +15,9 @@ RETURNING *;
 UPDATE users SET password=$2 WHERE id = $1
 RETURNING *;
 
+-- name: UserByEmail :one
+SELECT * FROM users WHERE email = $1;
+
 -- name: UserById :one
 SELECT * FROM users WHERE id=$1;
 

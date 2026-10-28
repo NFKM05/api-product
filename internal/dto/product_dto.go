@@ -3,14 +3,16 @@ package dto
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"io.github.com/api-product/internal/domain"
 )
 
 type CreateProduct struct {
-	ProductName string `json:"product_name"`
-	Quantity    int32  `json:"quantity"`
-	Price       string `json:"price"`
-	Description string `json:"description,omitempty"`
+	ProductName string    `json:"product_name"`
+	Quantity    int32     `json:"quantity"`
+	Price       string    `json:"price"`
+	Description string    `json:"description,omitempty"`
+	UserID      uuid.UUID `json:"user_id"`
 }
 
 type CreateProductResponse struct {
@@ -19,6 +21,7 @@ type CreateProductResponse struct {
 	Quantity    int32     `json:"quantity"`
 	Price       string    `json:"price"`
 	Description *string   `json:"description,omitempty"`
+	UserID      uuid.UUID `json:"user_id"`
 	CreatedAt   time.Time `json:"created_at"`
 }
 
@@ -36,6 +39,7 @@ func ProductResponseFromDomain(p domain.Product) CreateProductResponse {
 		Quantity:    p.Quantity,
 		Price:       p.Price,
 		Description: p.Description,
+		UserID:      p.UserID,
 		CreatedAt:   p.CreatedAt,
 	}
 }

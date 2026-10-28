@@ -8,11 +8,13 @@ package db
 import (
 	"context"
 	"database/sql"
+
+	"github.com/google/uuid"
 )
 
 const createProduct = `-- name: CreateProduct :one
-INSERT INTO products(product_name, quantity, price, description)
-VALUES($1, $2, $3, $4)
+INSERT INTO products(product_name, quantity, price, description, user_id)
+VALUES($1, $2, $3, $4, $5)
 RETURNING id, product_name, quantity, price, description, user_id, created_at, updated_at
 `
 
@@ -21,6 +23,7 @@ type CreateProductParams struct {
 	Quantity    int32
 	Price       string
 	Description sql.NullString
+	UserID      uuid.UUID
 }
 
 func (q *Queries) CreateProduct(ctx context.Context, arg CreateProductParams) (Product, error) {
@@ -29,6 +32,7 @@ func (q *Queries) CreateProduct(ctx context.Context, arg CreateProductParams) (P
 		arg.Quantity,
 		arg.Price,
 		arg.Description,
+		arg.UserID,
 	)
 	var i Product
 	err := row.Scan(

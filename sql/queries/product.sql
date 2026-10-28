@@ -1,6 +1,6 @@
 -- name: CreateProduct :one
-INSERT INTO products(product_name, quantity, price, description)
-VALUES($1, $2, $3, $4)
+INSERT INTO products(product_name, quantity, price, description, user_id)
+VALUES($1, $2, $3, $4, $5)
 RETURNING *;
 
 -- name: UpdateProduct :one

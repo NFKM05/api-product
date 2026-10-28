@@ -3,11 +3,12 @@ package service
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"io.github.com/api-product/internal/domain"
 )
 
 type ProductRepository interface {
-	Create(ctx context.Context, product string, quantity int32, price string, description *string) (domain.Product, error)
+	Create(ctx context.Context, product string, quantity int32, price string, description *string, userID uuid.UUID) (domain.Product, error)
 	UpdateProduct(ctx context.Context, id int32, name string, quantity int32, price string, description *string) (domain.Product, error)
 	ProductById(ctx context.Context, id int32) (domain.Product, error)
 	AllProducts(ctx context.Context) ([]domain.Product, error)
@@ -27,17 +28,18 @@ func (s *ProductService) prepare(p *domain.Product) error {
 	return p.Validate()
 }
 
-func (s *ProductService) CreateProduct(ctx context.Context, product string, quantity int32, price string, description *string) (domain.Product, error) {
+func (s *ProductService) CreateProduct(ctx context.Context, product string, quantity int32, price string, description *string, userID uuid.UUID) (domain.Product, error) {
 	prod := domain.Product{
 		ProductName: product,
 		Quantity:    quantity,
 		Price:       price,
 		Description: description,
+		UserID:      userID,
 	}
 	if err := s.prepare(&prod); err != nil {
 		return domain.Product{}, err
 	}
-	return s.repository.Create(ctx, product, quantity, price, description)
+	return s.repository.Create(ctx, product, quantity, price, description, userID)
 }
 
 func (s *ProductService) UpdateProduct(ctx context.Context, id int32, name string, quantity int32, price string, description *string) (domain.Product, error) {

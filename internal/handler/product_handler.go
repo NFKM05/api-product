@@ -30,7 +30,7 @@ func (h *ProductHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	product, err := h.service.CreateProduct(r.Context(), req.ProductName, req.Quantity, req.Price, &req.Description)
+	product, err := h.service.CreateProduct(r.Context(), req.ProductName, req.Quantity, req.Price, &req.Description, req.UserID)
 	if err != nil {
 		utils.NewApiError(w, http.StatusInternalServerError, errors.New("unespected error during the process"))
 		return

@@ -162,6 +162,24 @@ func (q *Queries) UpdateSenha(ctx context.Context, arg UpdateSenhaParams) (User,
 	return i, err
 }
 
+const userByEmail = `-- name: UserByEmail :one
+SELECT id, name, email, password, is_active, inactive_dt FROM users WHERE email = $1
+`
+
+func (q *Queries) UserByEmail(ctx context.Context, email string) (User, error) {
+	row := q.db.QueryRowContext(ctx, userByEmail, email)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Email,
+		&i.Password,
+		&i.IsActive,
+		&i.InactiveDt,
+	)
+	return i, err
+}
+
 const userById = `-- name: UserById :one
 SELECT id, name, email, password, is_active, inactive_dt FROM users WHERE id=$1
 `
