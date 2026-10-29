@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"io.github.com/api-product/internal/domain"
+	"io.github.com/api-product/internal/utils"
 )
 
 type UserRepository interface {
@@ -21,10 +22,10 @@ type UserRepository interface {
 
 type UserService struct {
 	repository UserRepository
-	jwtService *JwtService
+	jwtService *utils.JwtService
 }
 
-func NewUserService(repo UserRepository, jwtService *JwtService) *UserService {
+func NewUserService(repo UserRepository, jwtService *utils.JwtService) *UserService {
 	return &UserService{
 		repository: repo,
 		jwtService: jwtService,
@@ -79,11 +80,11 @@ func (s *UserService) Login(ctx context.Context, email, senha string) (string, e
 		return "", errors.New("invalid credentials")
 	}
 
-	if ok := domain.CheckPassword(user.Password, senha); !ok {
+	if ok := domain.CheckPassword(senha, user.Password); !ok {
 		return "", errors.New("invalid credentials")
 	}
 
-	return s.jwtService.
+	return s.jwtService.GenerateJwtToken(user.Email, user.ID)
 }
 
 func (s *UserService) ListAllUsers(ctx context.Context) ([]domain.User, error) {
