@@ -13,3 +13,7 @@ func RegisterProductRoutes(mux *http.ServeMux, h *handler.ProductHandler) {
 	mux.HandleFunc("GET /products", h.ListAll)
 	mux.HandleFunc("DELETE /products/{id}", h.Delete)
 }
+
+func RegisterUserRoutes(mux *http.ServeMux, h *handler.UserHandler) {
+
+}

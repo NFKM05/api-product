@@ -6,6 +6,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
+	"io.github.com/api-product/internal/dto"
 )
 
 const secretJwtKey = "supersecretkey"
@@ -30,7 +31,7 @@ func (j *JwtService) GenerateJwtToken(email string, userID uuid.UUID) (string, e
 	return token.SignedString([]byte(j.secretKey))
 }
 
-func (j *JwtService) VeririfyJwtToken(token string) (uuid.UUID, error) {
+func (j *JwtService) VeririfyJwtToken(token string) (*dto.TokenData, error) {
 	parsedToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
 		_, ok := token.Method.(*jwt.SigningMethodHMAC)
 		if !ok {
@@ -40,27 +41,32 @@ func (j *JwtService) VeririfyJwtToken(token string) (uuid.UUID, error) {
 	})
 
 	if err != nil {
-		return uuid.Nil, errors.New("could not parsed token")
+		return nil, errors.New("could not parsed token")
 	}
 
 	if !parsedToken.Valid {
-		return uuid.Nil, errors.New("invalid token")
+		return nil, errors.New("invalid token")
 	}
 
 	claims, ok := parsedToken.Claims.(jwt.MapClaims)
 	if !ok {
-		return uuid.Nil, errors.New("invalid token claims")
+		return nil, errors.New("invalid token claims")
 	}
 
 	userIDstr, ok := claims["userID"].(string)
 	if !ok {
-		return uuid.Nil, errors.New("invalid userID claims")
+		return nil, errors.New("invalid userID claims")
 	}
 
 	userID, err := uuid.Parse(userIDstr)
 	if err != nil {
-		return uuid.Nil, errors.New("invalid userID format")
+		return nil, errors.New("invalid userID format")
 	}
 
-	return userID, nil
+	email, _ := claims["email"].(string)
+
+	return &dto.TokenData{
+		UserID: userID,
+		Email:  email,
+	}, nil
 }
