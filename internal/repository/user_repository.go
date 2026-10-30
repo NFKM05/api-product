@@ -38,7 +38,7 @@ func (r *UserRepository) UpdateName(ctx context.Context, id uuid.UUID, name stri
 	})
 
 	if err != nil {
-		return domain.User{}, nil
+		return domain.User{}, err
 	}
 
 	return mapper.ToDomainUser(row), nil
@@ -51,7 +51,7 @@ func (r *UserRepository) UpdateEmail(ctx context.Context, id uuid.UUID, email st
 	})
 
 	if err != nil {
-		return domain.User{}, nil
+		return domain.User{}, err
 	}
 
 	return mapper.ToDomainUser(row), nil
@@ -64,7 +64,7 @@ func (r *UserRepository) UpdatePassword(ctx context.Context, id uuid.UUID, passw
 	})
 
 	if err != nil {
-		return domain.User{}, nil
+		return domain.User{}, err
 	}
 
 	return mapper.ToDomainUser(row), nil

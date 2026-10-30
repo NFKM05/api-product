@@ -27,10 +27,10 @@ func RegisterUserRoutes(mux *http.ServeMux, h *handler.UserHandler, jwtService *
 	mux.HandleFunc("POST /users", h.CreateUser)
 	mux.Handle("PATCH /users/{id}/change-name", auth(http.HandlerFunc(h.UpdateName)))
 	mux.Handle("PATCH /users/{id}/change-email", auth(http.HandlerFunc(h.UpdateEmail)))
+	mux.Handle("PATCH /users/{id}/change-password", auth(http.HandlerFunc(h.UpdatePassword)))
 	mux.Handle("PATCH /users/{id}/desactivate", auth(http.HandlerFunc(h.DesactivateUser)))
 	mux.Handle("GET /users", auth(http.HandlerFunc(h.ListAllUsers)))
 	mux.Handle("GET /users/{id}", auth(http.HandlerFunc(h.FindUserById)))
-	mux.HandleFunc("/", GetNotFound)
 }
 
 func GetNotFound(w http.ResponseWriter, r *http.Request) {

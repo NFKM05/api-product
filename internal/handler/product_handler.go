@@ -31,7 +31,13 @@ func (h *ProductHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	product, err := h.service.CreateProduct(r.Context(), req.ProductName, req.Quantity, req.Price, &req.Description, req.UserID)
+	tokenData := middleware.GetTokenData(r)
+	if tokenData == nil {
+		utils.NewApiError(w, http.StatusUnauthorized, errors.New("must be authenticated to access the resource"))
+		return
+	}
+
+	product, err := h.service.CreateProduct(r.Context(), req.ProductName, req.Quantity, req.Price, &req.Description, tokenData.UserID)
 	if err != nil {
 		utils.NewApiError(w, http.StatusInternalServerError, errors.New("unespected error during the process"))
 		return
@@ -59,13 +65,13 @@ func (h *ProductHandler) Update(w http.ResponseWriter, r *http.Request) {
 
 	tokenData := middleware.GetTokenData(r)
 	if tokenData == nil {
-		utils.NewApiError(w, http.StatusUnauthorized, errors.New("must be authenticated to access the resource."))
+		utils.NewApiError(w, http.StatusUnauthorized, errors.New("must be authenticated to access the resource"))
 		return
 	}
 
 	product, err := h.service.UpdateProduct(r.Context(), int32(id), req.ProductName, req.Quantity, req.Price, &req.Description, tokenData.UserID)
 	if err != nil {
-		utils.NewApiError(w, http.StatusInternalServerError, errors.New("unespected error during the process"))
+		utils.NewApiError(w, http.StatusForbidden, errors.New("you do not have permission to access this resource"))
 		return
 	}
 
@@ -125,7 +131,7 @@ func (h *ProductHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.service.DeleteProduct(r.Context(), int32(id), tokenData.UserID); err != nil {
-		utils.NewApiError(w, http.StatusInternalServerError, errors.New("unespected error during the process"))
+		utils.NewApiError(w, http.StatusForbidden, errors.New("you do not have permission to access this resource"))
 		return
 	}
 

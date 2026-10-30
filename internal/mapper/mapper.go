@@ -26,7 +26,7 @@ func ToDomainUser(u db.User) domain.User {
 		Name:       u.Name,
 		Email:      u.Email,
 		Password:   u.Password,
-		IsActive:   u.IsActive.Valid,
+		IsActive:   u.IsActive.Bool,
 		InactiveDt: u.InactiveDt.Time,
 	}
 }

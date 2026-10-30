@@ -135,7 +135,7 @@ func (h *UserHandler) UpdatePassword(w http.ResponseWriter, r *http.Request) {
 
 	tokenData := middleware.GetTokenData(r)
 	if tokenData == nil {
-		utils.NewApiError(w, http.StatusUnauthorized, errors.New("missing authenticated user"))
+		utils.NewApiError(w, http.StatusUnauthorized, errors.New("must be authenticated to access the resource"))
 		return
 	}
 
@@ -193,16 +193,15 @@ func (h *UserHandler) DesactivateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var req dto.DesactivateUser
-
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		utils.NewApiError(w, http.StatusBadRequest, errors.New("body does not match the expected format"))
+	tokenData := middleware.GetTokenData(r)
+	if tokenData == nil {
+		utils.NewApiError(w, http.StatusUnauthorized, errors.New("must be authenticated to access the resource"))
 		return
 	}
 
-	user, err := h.service.DesactivateUser(r.Context(), id)
+	user, err := h.service.DesactivateUser(r.Context(), id, tokenData.UserID)
 	if err != nil {
-		utils.NewApiError(w, http.StatusInternalServerError, errors.New("unespected erro during the process"))
+		utils.NewApiError(w, http.StatusForbidden, errors.New("you do not have permission to access this resource"))
 		return
 	}
 

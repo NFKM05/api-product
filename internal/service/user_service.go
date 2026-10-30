@@ -56,7 +56,7 @@ func (s *UserService) Create(ctx context.Context, name string, email string, pas
 	}
 
 	if err := s.prepare(&user); err != nil {
-		return domain.User{}, nil
+		return domain.User{}, err
 	}
 
 	return s.repository.Create(ctx, name, email, password)
@@ -82,7 +82,7 @@ func (s *UserService) UpdateEmail(ctx context.Context, id uuid.UUID, email strin
 
 func (s *UserService) UpdatePassword(ctx context.Context, id uuid.UUID, password string, newPass string, requesterID uuid.UUID) (domain.User, error) {
 	if id != requesterID {
-		return domain.User{}, errors.New("the request user must be the same as the account user.")
+		return domain.User{}, errors.New("the request user must be the same as the account user")
 	}
 
 	user, err := s.repository.FindUserById(ctx, id)
@@ -122,6 +122,11 @@ func (s *UserService) FindUserById(ctx context.Context, id uuid.UUID) (domain.Us
 	return s.repository.FindUserById(ctx, id)
 }
 
-func (s *UserService) DesactivateUser(ctx context.Context, id uuid.UUID) (domain.User, error) {
+func (s *UserService) DesactivateUser(ctx context.Context, id uuid.UUID, requesterID uuid.UUID) (domain.User, error) {
+
+	if id != requesterID {
+		return domain.User{}, errors.New("the request user must be the same as the account user.")
+	}
+
 	return s.repository.DesactivateUser(ctx, id)
 }
