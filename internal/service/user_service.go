@@ -59,7 +59,7 @@ func (s *UserService) Create(ctx context.Context, name string, email string, pas
 		return domain.User{}, err
 	}
 
-	return s.repository.Create(ctx, name, email, password)
+	return s.repository.Create(ctx, user.Name, user.Email, user.Password)
 }
 
 func (s *UserService) UpdateName(ctx context.Context, id uuid.UUID, name string, requesterID uuid.UUID) (domain.User, error) {
