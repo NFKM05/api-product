@@ -22,7 +22,7 @@ func Auth(jwtService *utils.JwtService) func(http.Handler) http.Handler {
 			headerData.Authorization = r.Header.Get("Authorization")
 
 			if err := headerData.Validate(); err != nil {
-				utils.NewApiError(w, http.StatusBadRequest, errors.New("authorization header is required for access resource"))
+				utils.NewApiError(w, http.StatusUnauthorized, errors.New("authorization token is required for access resource"))
 				return
 			}
 
