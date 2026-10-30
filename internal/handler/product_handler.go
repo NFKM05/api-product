@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"io.github.com/api-product/internal/dto"
+	"io.github.com/api-product/internal/middleware"
 	"io.github.com/api-product/internal/service"
 	"io.github.com/api-product/internal/utils"
 )
@@ -56,7 +57,13 @@ func (h *ProductHandler) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	product, err := h.service.UpdateProduct(r.Context(), int32(id), req.ProductName, req.Quantity, req.Price, &req.Description)
+	tokenData := middleware.GetTokenData(r)
+	if tokenData == nil {
+		utils.NewApiError(w, http.StatusUnauthorized, errors.New("must be authenticated to access the resource."))
+		return
+	}
+
+	product, err := h.service.UpdateProduct(r.Context(), int32(id), req.ProductName, req.Quantity, req.Price, &req.Description, tokenData.UserID)
 	if err != nil {
 		utils.NewApiError(w, http.StatusInternalServerError, errors.New("unespected error during the process"))
 		return
@@ -111,7 +118,13 @@ func (h *ProductHandler) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.service.DeleteProduct(r.Context(), int32(id)); err != nil {
+	tokenData := middleware.GetTokenData(r)
+	if tokenData == nil {
+		utils.NewApiError(w, http.StatusUnauthorized, errors.New("must be authenticated to access the resource"))
+		return
+	}
+
+	if err := h.service.DeleteProduct(r.Context(), int32(id), tokenData.UserID); err != nil {
 		utils.NewApiError(w, http.StatusInternalServerError, errors.New("unespected error during the process"))
 		return
 	}

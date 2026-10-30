@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 
 	"github.com/google/uuid"
 	"io.github.com/api-product/internal/domain"
@@ -42,13 +43,26 @@ func (s *ProductService) CreateProduct(ctx context.Context, product string, quan
 	return s.repository.Create(ctx, product, quantity, price, description, userID)
 }
 
-func (s *ProductService) UpdateProduct(ctx context.Context, id int32, name string, quantity int32, price string, description *string) (domain.Product, error) {
+func (s *ProductService) UpdateProduct(ctx context.Context, id int32, name string, quantity int32, price string, description *string, userID uuid.UUID) (domain.Product, error) {
+
+	product, err := s.repository.ProductById(ctx, id)
+
+	if err != nil {
+		return domain.Product{}, errors.New("product not found")
+	}
+
+	if product.UserID != userID {
+		return domain.Product{}, errors.New("the user provided is not the same as the registered user.")
+	}
+
 	prod := domain.Product{
 		ProductName: name,
 		Quantity:    quantity,
 		Price:       price,
 		Description: description,
+		UserID:      userID,
 	}
+
 	if err := s.prepare(&prod); err != nil {
 		return domain.Product{}, err
 	}
@@ -63,6 +77,16 @@ func (s *ProductService) AllProducts(ctx context.Context) ([]domain.Product, err
 	return s.repository.AllProducts(ctx)
 }
 
-func (s *ProductService) DeleteProduct(ctx context.Context, id int32) error {
+func (s *ProductService) DeleteProduct(ctx context.Context, id int32, userID uuid.UUID) error {
+	product, err := s.repository.ProductById(ctx, id)
+
+	if err != nil {
+		return errors.New("product not found")
+	}
+
+	if product.UserID != userID {
+		return errors.New("the user provided is not the same as the registered user.")
+	}
+
 	return s.repository.DeleteProduct(ctx, id)
 }

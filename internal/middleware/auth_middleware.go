@@ -22,14 +22,14 @@ func Auth(jwtService *utils.JwtService) func(http.Handler) http.Handler {
 			headerData.Authorization = r.Header.Get("Authorization")
 
 			if err := headerData.Validate(); err != nil {
-				utils.NewApiError(w, http.StatusBadRequest, errors.New(""))
+				utils.NewApiError(w, http.StatusBadRequest, errors.New("body does not matched format expected"))
 				return
 			}
 
-			token := strings.TrimPrefix(headerData.Authorization, "Bearer")
+			token := strings.TrimPrefix(headerData.Authorization, "Bearer ")
 			tokenData, err := jwtService.VeririfyJwtToken(token)
 			if err != nil {
-				utils.NewApiError(w, http.StatusUnauthorized, errors.New(""))
+				utils.NewApiError(w, http.StatusUnauthorized, errors.New("unauthorized token"))
 				return
 			}
 

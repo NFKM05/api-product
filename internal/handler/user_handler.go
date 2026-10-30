@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 	"io.github.com/api-product/internal/dto"
+	"io.github.com/api-product/internal/middleware"
 	"io.github.com/api-product/internal/service"
 	"io.github.com/api-product/internal/utils"
 )
@@ -72,9 +73,15 @@ func (h *UserHandler) UpdateName(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := h.service.UpdateName(r.Context(), id, req.Name)
+	tokenData := middleware.GetTokenData(r)
+	if tokenData == nil {
+		utils.NewApiError(w, http.StatusUnauthorized, errors.New("must be authenticated to access the resource"))
+		return
+	}
+
+	user, err := h.service.UpdateName(r.Context(), id, req.Name, tokenData.UserID)
 	if err != nil {
-		utils.NewApiError(w, http.StatusInternalServerError, errors.New("unespected erro during the process"))
+		utils.NewApiError(w, http.StatusForbidden, errors.New("you do not have permission to access this resource"))
 		return
 	}
 
@@ -96,16 +103,22 @@ func (h *UserHandler) UpdateEmail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := h.service.UpdateEmail(r.Context(), id, req.Email)
+	tokenData := middleware.GetTokenData(r)
+	if tokenData == nil {
+		utils.NewApiError(w, http.StatusUnauthorized, errors.New("must be authenticated to access the resource"))
+		return
+	}
+
+	user, err := h.service.UpdateEmail(r.Context(), id, req.Email, tokenData.UserID)
 	if err != nil {
-		utils.NewApiError(w, http.StatusInternalServerError, errors.New("unespected erro during the process"))
+		utils.NewApiError(w, http.StatusForbidden, errors.New("you do not have permission to access this resource"))
 		return
 	}
 
 	utils.WriteJSON(w, http.StatusOK, dto.UserResponseFromDomain(user))
 }
 
-/*func (h *UserHandler) UpdatePassword(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) UpdatePassword(w http.ResponseWriter, r *http.Request) {
 	idParam := r.PathValue("id")
 	id, err := uuid.Parse(idParam)
 	if err != nil {
@@ -113,7 +126,27 @@ func (h *UserHandler) UpdateEmail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-}*/
+	var req dto.UpdatePasswordRequest
+
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		utils.NewApiError(w, http.StatusBadRequest, errors.New("body does not match the expected format"))
+		return
+	}
+
+	tokenData := middleware.GetTokenData(r)
+	if tokenData == nil {
+		utils.NewApiError(w, http.StatusUnauthorized, errors.New("missing authenticated user"))
+		return
+	}
+
+	user, err := h.service.UpdatePassword(r.Context(), id, req.Password, req.NewPassword, tokenData.UserID)
+	if err != nil {
+		utils.NewApiError(w, http.StatusInternalServerError, errors.New("unespected erro during the process"))
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, dto.UserResponseFromDomain(user))
+}
 
 func (h *UserHandler) ListAllUsers(w http.ResponseWriter, r *http.Request) {
 

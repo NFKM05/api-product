@@ -62,16 +62,43 @@ func (s *UserService) Create(ctx context.Context, name string, email string, pas
 	return s.repository.Create(ctx, name, email, password)
 }
 
-func (s *UserService) UpdateName(ctx context.Context, id uuid.UUID, name string) (domain.User, error) {
+func (s *UserService) UpdateName(ctx context.Context, id uuid.UUID, name string, requesterID uuid.UUID) (domain.User, error) {
+
+	if requesterID != id {
+		return domain.User{}, errors.New("the request user must be the same as the account user.")
+	}
+
 	return s.repository.UpdateName(ctx, id, name)
 }
 
-func (s *UserService) UpdateEmail(ctx context.Context, id uuid.UUID, email string) (domain.User, error) {
+func (s *UserService) UpdateEmail(ctx context.Context, id uuid.UUID, email string, requesterID uuid.UUID) (domain.User, error) {
+
+	if requesterID != id {
+		return domain.User{}, errors.New("the request user must be the same as the account user.")
+	}
+
 	return s.repository.UpdateEmail(ctx, id, email)
 }
 
-func (s *UserService) UpdatePassword(ctx context.Context, id uuid.UUID, password string) (domain.User, error) {
-	return s.repository.UpdatePassword(ctx, id, password)
+func (s *UserService) UpdatePassword(ctx context.Context, id uuid.UUID, password string, newPass string, requesterID uuid.UUID) (domain.User, error) {
+	if id != requesterID {
+		return domain.User{}, errors.New("the request user must be the same as the account user.")
+	}
+
+	user, err := s.repository.FindUserById(ctx, id)
+	if err != nil {
+		return domain.User{}, errors.New("user not found")
+	}
+
+	if ok := domain.CheckPassword(password, user.Password); !ok {
+		return domain.User{}, errors.New("incorrect password")
+	}
+
+	hash, err := domain.HashPassword(newPass)
+	if err != nil {
+		return domain.User{}, err
+	}
+	return s.repository.UpdatePassword(ctx, id, hash)
 }
 
 func (s *UserService) Login(ctx context.Context, email, senha string) (string, error) {
