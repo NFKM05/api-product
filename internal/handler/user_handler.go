@@ -22,6 +22,16 @@ func NewUserHandler(svc *service.UserService) *UserHandler {
 	}
 }
 
+// CreateUser godoc
+// @Summary Criar usuário
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param request body dto.UserRequest true "Dados de criação de usuário"
+// @Success 201 {object} dto.UserResponse
+// @Failure 400 {object} utils.ApiError
+// @Failure 500 {object} utils.ApiError
+// @Router /users [post]
 func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var req dto.UserRequest
 
@@ -39,6 +49,16 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJSON(w, http.StatusCreated, dto.UserResponseFromDomain(user))
 }
 
+// Login godoc
+// @Summary Realizar login para obter o Bearer token
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param request body dto.LoginRequest true "Dados de login"
+// @Success 200 {object} dto.LoginResponse
+// @Failure 400 {object} utils.ApiError
+// @Failure 401 {object} utils.ApiError
+// @Router /login [post]
 func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 	var req dto.LoginRequest
 
@@ -56,6 +76,20 @@ func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJSON(w, http.StatusOK, dto.LoginResponse{Token: token})
 }
 
+// UpdateName godoc
+// @Summary Atualizar o nome do usuário cadastrado
+// @Tags users
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path int true "Id do usuário"
+// @Param request body dto.UpdateNameRequest true "Dados do usuário"
+// @Success 200 {object} dto.UserResponse
+// @Failure 404 {object} utils.ApiError
+// @Failure 400 {object} utils.ApiError
+// @Failure 400 {object} utils.ApiError
+// @Failure 400 {object} utils.ApiError
+// @Router /users/{id}/change-name [patch]
 func (h *UserHandler) UpdateName(w http.ResponseWriter, r *http.Request) {
 
 	idParam := r.PathValue("id")
@@ -88,6 +122,20 @@ func (h *UserHandler) UpdateName(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJSON(w, http.StatusOK, dto.UserResponseFromDomain(user))
 }
 
+// UpdateEmail godoc
+// @Summary Atualizar o email do cadastro do usuário
+// @Tags users
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path int true "Id do usuário"
+// @Param request body dto.UpdateEmailRequest true "Dados do usuário"
+// @Success 200 {object} dto.UserResponse
+// @Failure 404 {object} utils.ApiError
+// @Failure 400 {object} utils.ApiError
+// @Failure 401 {object} utils.ApiError
+// @Failure 403 {object} utils.ApiError
+// @Router /users/{id}/change-email [patch]
 func (h *UserHandler) UpdateEmail(w http.ResponseWriter, r *http.Request) {
 	idParam := r.PathValue("id")
 	id, err := uuid.Parse(idParam)
@@ -118,6 +166,20 @@ func (h *UserHandler) UpdateEmail(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJSON(w, http.StatusOK, dto.UserResponseFromDomain(user))
 }
 
+// UpdatePassword godoc
+// @Summary Atualiza a senha de um usuário
+// @Tags users
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path int true "Id do usuário"
+// @Param request body dto.UpdatePasswordRequest true "Dados do usuário"
+// @Success 200 {object} dto.UserResponse
+// @Failure 404 {object} utils.ApiError
+// @Failure 400 {object} utils.ApiError
+// @Failure 401 {object} utils.ApiError
+// @Failure 500 {object} utils.ApiError
+// @Router /users/{id}/change-password [patch]
 func (h *UserHandler) UpdatePassword(w http.ResponseWriter, r *http.Request) {
 	idParam := r.PathValue("id")
 	id, err := uuid.Parse(idParam)
@@ -148,6 +210,14 @@ func (h *UserHandler) UpdatePassword(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJSON(w, http.StatusOK, dto.UserResponseFromDomain(user))
 }
 
+// ListAllUsers godoc
+// @Summary Lista todos os usuários cadastrados na base
+// @Tags users
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {array} dto.UserResponse
+// @Failure 500 {object} utils.ApiError
+// @Router /users [get]
 func (h *UserHandler) ListAllUsers(w http.ResponseWriter, r *http.Request) {
 
 	users, err := h.service.ListAllUsers(r.Context())
@@ -166,6 +236,16 @@ func (h *UserHandler) ListAllUsers(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// FindUserById godoc
+// @Summary Lista usuários por identificador
+// @Tags users
+// @Produce json
+// @Security BearerAuth
+// @Param id path int true "Id do usuário"
+// @Success 200 {object} dto.UserResponse
+// @Failure 404 {object} utils.ApiError
+// @Failure 500 {object} utils.ApiError
+// @Router /users/{id} [get]
 func (h *UserHandler) FindUserById(w http.ResponseWriter, r *http.Request) {
 
 	idParam := r.PathValue("id")
@@ -184,6 +264,17 @@ func (h *UserHandler) FindUserById(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJSON(w, http.StatusOK, dto.UserResponseFromDomain(user))
 }
 
+// DesactivateUser godoc
+// @Summary
+// @Tags
+// @Produce json
+// @Security BearerAuth
+// @Param id path int true "Id do usuário"
+// @Success 200 {object} dto.DesactivateUser
+// @Failure 404 {object} utils.ApiError
+// @Failure 401 {object} utils.ApiError
+// @Failure 403 {object} utils.ApiError
+// @Router /users/{id}/desactivate [patch]
 func (h *UserHandler) DesactivateUser(w http.ResponseWriter, r *http.Request) {
 
 	idParam := r.PathValue("id")

@@ -6,10 +6,21 @@ import (
 	"log"
 	"net/http"
 
+	_ "io.github.com/api-product/docs"
 	"io.github.com/api-product/internal/bootstrap"
 	"io.github.com/api-product/internal/config"
 	"io.github.com/api-product/internal/connection"
 )
+
+// @title api-product
+// @version 1.0
+// @description Api de cadastro de produtos com autenticação de usuários
+// @host localhost:8080
+// @BasePath /
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Token de acesso no formato Bearer {token}
 
 func main() {
 

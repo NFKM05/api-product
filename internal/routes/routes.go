@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 
+	httpSwagger "github.com/swaggo/http-swagger"
 	"io.github.com/api-product/internal/handler"
 	"io.github.com/api-product/internal/middleware"
 	"io.github.com/api-product/internal/utils"
@@ -31,6 +32,10 @@ func RegisterUserRoutes(mux *http.ServeMux, h *handler.UserHandler, jwtService *
 	mux.Handle("PATCH /users/{id}/desactivate", auth(http.HandlerFunc(h.DesactivateUser)))
 	mux.Handle("GET /users", auth(http.HandlerFunc(h.ListAllUsers)))
 	mux.Handle("GET /users/{id}", auth(http.HandlerFunc(h.FindUserById)))
+}
+
+func RegisterSwaggerRoutes(mux *http.ServeMux) {
+	mux.Handle("/swagger", httpSwagger.WrapHandler)
 }
 
 func GetNotFound(w http.ResponseWriter, r *http.Request) {

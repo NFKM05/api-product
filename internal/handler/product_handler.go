@@ -23,6 +23,18 @@ func NewProductHandler(svc *service.ProductService) *ProductHandler {
 }
 
 // Cria um novo produto
+// CreateProduct godoc
+// @Summary criação de um novo produto
+// @Tags products
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param request body dto.CreateProduct true "Dados de criação do produto"
+// @Success 201 {object} dto.CreateProductResponse
+// @Failure 400 {object} utils.ApiError
+// @Failure 401 {object} utils.ApiError
+// @Failure 500 {object} utils.ApiError
+// @Router /products [post]
 func (h *ProductHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var req dto.CreateProduct
 
@@ -47,6 +59,20 @@ func (h *ProductHandler) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 // Atualiza um produto existente
+// UpdateProduct godoc
+// @Summary Atualizar os dados de um produto existente
+// @Tags products
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path int true "Id do produto"
+// @Param request body dto.UpdateProduct true "Dados do produto"
+// @Success 200 {object} dto.CreateProductResponse
+// @Failure 404 {object} utils.ApiError
+// @Failure 400 {object} utils.ApiError
+// @Failure 401 {object} utils.ApiError
+// @Failure 403 {object} utils.ApiError
+// @Router /products/{id} [put]
 func (h *ProductHandler) Update(w http.ResponseWriter, r *http.Request) {
 
 	idParam := r.PathValue("id")
@@ -75,10 +101,20 @@ func (h *ProductHandler) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	utils.WriteJSON(w, http.StatusNoContent, dto.ProductResponseFromDomain(product))
+	utils.WriteJSON(w, http.StatusOK, dto.ProductResponseFromDomain(product))
 }
 
 // Busca um produto por um identificador
+// ProductById godoc
+// @Summary Pesquisa um produto pelo seu identificador
+// @Tags products
+// @Produce json
+// @Security BearerAuth
+// @Param id path int true "Id do produto"
+// @Success 200 {object} dto.CreateProductResponse
+// @Failure 400 {object} utils.ApiError
+// @Failure 404 {object} utils.ApiError
+// @Router /products/{id} [get]
 func (h *ProductHandler) ProductById(w http.ResponseWriter, r *http.Request) {
 	idParam := r.PathValue("id")
 	id, err := strconv.ParseInt(idParam, 10, 32)
@@ -98,6 +134,14 @@ func (h *ProductHandler) ProductById(w http.ResponseWriter, r *http.Request) {
 }
 
 // Lista todos os produtos cadastrados
+// ListAllProducts godoc
+// @Summary Lista todos os produtos cadastrados na base
+// @Tags products
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {array} dto.CreateProductResponse
+// @Failure 500 {object} utils.ApiError
+// @Router /products [get]
 func (h *ProductHandler) ListAll(w http.ResponseWriter, r *http.Request) {
 	products, err := h.service.AllProducts(r.Context())
 	if err != nil {
@@ -115,6 +159,17 @@ func (h *ProductHandler) ListAll(w http.ResponseWriter, r *http.Request) {
 }
 
 // Exclui um produto cadastrado
+// DeleteProduct godoc
+// @Summary Exclui um produto da base
+// @Tags products
+// @Security BearerAuth
+// @Param id path int true "Id do produto"
+// @Success 204
+// @Failure 404 {object} utils.ApiError
+// @Failure 401 {object} utils.ApiError
+// @Failure 403 {object} utils.ApiError
+// @Router /products/{id} [delete]
+
 func (h *ProductHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	idParam := r.PathValue("id")
 	id, err := strconv.ParseInt(idParam, 10, 32)

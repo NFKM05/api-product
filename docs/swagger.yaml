@@ -1,0 +1,504 @@
+basePath: /
+definitions:
+  io_github_com_api-product_internal_dto.CreateProduct:
+    properties:
+      description:
+        type: string
+      price:
+        type: string
+      product_name:
+        type: string
+      quantity:
+        type: integer
+      user_id:
+        type: string
+    type: object
+  io_github_com_api-product_internal_dto.CreateProductResponse:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      price:
+        type: string
+      product_name:
+        type: string
+      quantity:
+        type: integer
+      user_id:
+        type: string
+    type: object
+  io_github_com_api-product_internal_dto.DesactivateUser:
+    properties:
+      inactive_dt:
+        type: string
+      name:
+        type: string
+    type: object
+  io_github_com_api-product_internal_dto.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  io_github_com_api-product_internal_dto.LoginResponse:
+    properties:
+      access_token:
+        type: string
+    type: object
+  io_github_com_api-product_internal_dto.UpdateEmailRequest:
+    properties:
+      email:
+        type: string
+    type: object
+  io_github_com_api-product_internal_dto.UpdateNameRequest:
+    properties:
+      name:
+        type: string
+    type: object
+  io_github_com_api-product_internal_dto.UpdatePasswordRequest:
+    properties:
+      current_password:
+        type: string
+      new_password:
+        type: string
+    type: object
+  io_github_com_api-product_internal_dto.UpdateProduct:
+    properties:
+      description:
+        type: string
+      price:
+        type: string
+      product_name:
+        type: string
+      quantity:
+        type: integer
+    type: object
+  io_github_com_api-product_internal_dto.UserRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
+  io_github_com_api-product_internal_dto.UserResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      is_active:
+        type: boolean
+      name:
+        type: string
+    type: object
+  io_github_com_api-product_internal_utils.ApiError:
+    properties:
+      message: {}
+      status:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Api de cadastro de produtos com autenticação de usuários
+  title: api-product
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Dados de login
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/io_github_com_api-product_internal_dto.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_dto.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+      summary: Realizar login para obter o Bearer token
+      tags:
+      - users
+  /products:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/io_github_com_api-product_internal_dto.CreateProductResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+      security:
+      - BearerAuth: []
+      summary: Lista todos os produtos cadastrados na base
+      tags:
+      - products
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Dados de criação do produto
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/io_github_com_api-product_internal_dto.CreateProduct'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_dto.CreateProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+      security:
+      - BearerAuth: []
+      summary: criação de um novo produto
+      tags:
+      - products
+  /products/{id}:
+    get:
+      parameters:
+      - description: Id do produto
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_dto.CreateProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+      security:
+      - BearerAuth: []
+      summary: Pesquisa um produto pelo seu identificador
+      tags:
+      - products
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Id do produto
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Dados do produto
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/io_github_com_api-product_internal_dto.UpdateProduct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_dto.CreateProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+      security:
+      - BearerAuth: []
+      summary: Atualizar os dados de um produto existente
+      tags:
+      - products
+  /users:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/io_github_com_api-product_internal_dto.UserResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+      security:
+      - BearerAuth: []
+      summary: Lista todos os usuários cadastrados na base
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Dados de criação de usuário
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/io_github_com_api-product_internal_dto.UserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_dto.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+      summary: Criar usuário
+      tags:
+      - users
+  /users/{id}:
+    get:
+      parameters:
+      - description: Id do usuário
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_dto.UserResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+      security:
+      - BearerAuth: []
+      summary: Lista usuários por identificador
+      tags:
+      - users
+  /users/{id}/change-email:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Id do usuário
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Dados do usuário
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/io_github_com_api-product_internal_dto.UpdateEmailRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_dto.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+      security:
+      - BearerAuth: []
+      summary: Atualizar o email do cadastro do usuário
+      tags:
+      - users
+  /users/{id}/change-name:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Id do usuário
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Dados do usuário
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/io_github_com_api-product_internal_dto.UpdateNameRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_dto.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+      security:
+      - BearerAuth: []
+      summary: Atualizar o nome do usuário cadastrado
+      tags:
+      - users
+  /users/{id}/change-password:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Id do usuário
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Dados do usuário
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/io_github_com_api-product_internal_dto.UpdatePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_dto.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+      security:
+      - BearerAuth: []
+      summary: Atualiza a senha de um usuário
+      tags:
+      - users
+  /users/{id}/desactivate:
+    patch:
+      parameters:
+      - description: Id do usuário
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_dto.DesactivateUser'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/io_github_com_api-product_internal_utils.ApiError'
+      security:
+      - BearerAuth: []
+      tags:
+      - ""
+securityDefinitions:
+  BearerAuth:
+    description: Token de acesso no formato Bearer {token}
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

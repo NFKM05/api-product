@@ -28,5 +28,7 @@ func InjectionDependency(sqlConn *sql.DB) http.Handler {
 	userHandler := handler.NewUserHandler(userService)
 	routes.RegisterUserRoutes(mux, userHandler, jwt)
 
+	routes.RegisterSwaggerRoutes(mux)
+
 	return middleware.LoggerMiddleware(mux)
 }

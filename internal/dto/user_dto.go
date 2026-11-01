@@ -43,6 +43,7 @@ type LoginResponse struct {
 }
 
 type DesactivateUser struct {
+	Username   string    `json:"name"`
 	InactiveDt time.Time `json:"inactive_dt"`
 }
 
