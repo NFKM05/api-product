@@ -6,10 +6,11 @@ import (
 )
 
 type ApiError struct {
-	StatusCode int `json:"status"`
-	Message    any `json:"message"`
-}
+	StatusCode int    `json:"status"`
+	Message    string `json:"message"`
+} // @name Errors
 
+// Função auxiliar para gerar os erros de API na aplicação
 func NewApiError(w http.ResponseWriter, status int, err error) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)

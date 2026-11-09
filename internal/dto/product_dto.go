@@ -13,7 +13,7 @@ type CreateProduct struct {
 	Price       string    `json:"price"`
 	Description string    `json:"description,omitempty"`
 	UserID      uuid.UUID `json:"user_id"`
-}
+} // @name CreateProduct
 
 type CreateProductResponse struct {
 	ID          int32     `json:"id"`
@@ -23,14 +23,14 @@ type CreateProductResponse struct {
 	Description *string   `json:"description,omitempty"`
 	UserID      uuid.UUID `json:"user_id"`
 	CreatedAt   time.Time `json:"created_at"`
-}
+} // @name CreateProductResponse
 
 type UpdateProduct struct {
 	ProductName string `json:"product_name"`
 	Quantity    int32  `json:"quantity"`
 	Price       string `json:"price"`
 	Description string `json:"description,omitempty"`
-}
+} // @name UpdateProduct
 
 func ProductResponseFromDomain(p domain.Product) CreateProductResponse {
 	return CreateProductResponse{

@@ -6,12 +6,14 @@ import (
 	"strings"
 )
 
+// Struct que contém todos os dados de configuração da aplicação a partir de variáveis de amb.
 type Config struct {
 	PostgresURL   string
 	MigrationPath string
 	ServicePort   string
 }
 
+// Função que inicializa e carrega as variáveis de ambiente do arquivo .env e monta a config
 func LoadConfig() *Config {
 
 	loadEnv()
@@ -23,6 +25,7 @@ func LoadConfig() *Config {
 	}
 }
 
+// Função que lê o arquivo .env linha a linha, e injeta os pares de chave=valor
 func loadEnv() {
 	file, err := os.Open(".env.example")
 	if err != nil {

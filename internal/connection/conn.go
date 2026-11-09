@@ -14,6 +14,7 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
+// Struct que define as configurações padrão da conexão com o banco de dados
 type ConnectConfig struct {
 	DSN             string
 	MaxOpenConns    int
@@ -23,6 +24,7 @@ type ConnectConfig struct {
 	ForceUTC        bool
 }
 
+// Função que retorna a struct padrão de conexão com os valores definidos
 func NewConnectConfig() ConnectConfig {
 	return ConnectConfig{
 		MaxOpenConns:    5,
@@ -32,6 +34,7 @@ func NewConnectConfig() ConnectConfig {
 	}
 }
 
+// Função que aplica as migrations no banco de dados, lê URL do banco e das migrations do .env
 func MigrateDatabase() error {
 	databaseURL := os.Getenv("DATABASE_URL")
 	migrationPath := os.Getenv("MIGRATION_PATH")
@@ -43,11 +46,13 @@ func MigrateDatabase() error {
 		return fmt.Errorf("Migration Path is not available")
 	}
 
+	// Resolve o caminho das migrations para absoluto
 	absPathMigration, err := filepath.Abs(migrationPath)
 	if err != nil {
 		return fmt.Errorf("Absolute migration path is not available: %w", err)
 	}
 
+	// Normaliza as barras
 	migrationURL := "file://" + strings.ReplaceAll(absPathMigration, `\`, "/")
 
 	conn, err := sql.Open("postgres", databaseURL)
@@ -66,6 +71,7 @@ func MigrateDatabase() error {
 		return fmt.Errorf("Failed to create migrate instance: %w", err)
 	}
 
+	// Faz a validação de que o banco está na sua versão mais recente sem migration pendente
 	if err := mig.Up(); err != nil && err != migrate.ErrNoChange {
 		return fmt.Errorf("Failed to apply migrations: %w", err)
 	}
@@ -73,6 +79,7 @@ func MigrateDatabase() error {
 	return nil
 }
 
+// Abre o pool de conexões que a aplicação utiliza durante a execução da aplicação
 func OpenConnection(ctx context.Context, config ConnectConfig) (*sql.DB, error) {
 
 	if config.DSN == "" {
@@ -83,6 +90,7 @@ func OpenConnection(ctx context.Context, config ConnectConfig) (*sql.DB, error) 
 		return nil, fmt.Errorf("Database not provided and Postgres URL not set")
 	}
 
+	// Fallback de segurança garantindo que o pool nunca fique sem limite
 	if config.MaxOpenConns == 0 {
 		config.MaxOpenConns = 25
 	}
@@ -101,6 +109,7 @@ func OpenConnection(ctx context.Context, config ConnectConfig) (*sql.DB, error) 
 	db.SetConnMaxIdleTime(config.ConnMaxIdle)
 	db.SetConnMaxLifetime(config.ConnMaxLifetime)
 
+	// Valida a conexão antes de retornar com um Ping
 	if err := db.PingContext(ctx); err != nil {
 		db.Close()
 		return nil, fmt.Errorf("Failed to ping database: %w", err)

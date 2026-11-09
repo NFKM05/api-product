@@ -7,10 +7,12 @@ import (
 	"github.com/google/uuid"
 )
 
+// Struct que representa o Authorization recebido na requisição usado pelo Middleware
 type HeaderData struct {
 	Authorization string
 }
 
+// Função auxiliar o Middleware que valida o header da requisição
 func (h *HeaderData) Validate() error {
 	if h.Authorization == "" {
 		return errors.New("authorization header is required")
@@ -23,6 +25,7 @@ func (h *HeaderData) Validate() error {
 	return nil
 }
 
+// Struct que contém os dados extraídos de um JWT já validado
 type TokenData struct {
 	UserID uuid.UUID
 	Email  string

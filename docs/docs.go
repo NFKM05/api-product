@@ -34,7 +34,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_dto.LoginRequest"
+                            "$ref": "#/definitions/LoginRequest"
                         }
                     }
                 ],
@@ -42,19 +42,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_dto.LoginResponse"
+                            "$ref": "#/definitions/LoginResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     }
                 }
@@ -80,14 +80,14 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/io_github_com_api-product_internal_dto.CreateProductResponse"
+                                "$ref": "#/definitions/CreateProductResponse"
                             }
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     }
                 }
@@ -115,7 +115,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_dto.CreateProduct"
+                            "$ref": "#/definitions/CreateProduct"
                         }
                     }
                 ],
@@ -123,25 +123,25 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_dto.CreateProductResponse"
+                            "$ref": "#/definitions/CreateProductResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     }
                 }
@@ -174,19 +174,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_dto.CreateProductResponse"
+                            "$ref": "#/definitions/CreateProductResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     }
                 }
@@ -221,7 +221,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_dto.UpdateProduct"
+                            "$ref": "#/definitions/UpdateProduct"
                         }
                     }
                 ],
@@ -229,31 +229,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_dto.CreateProductResponse"
+                            "$ref": "#/definitions/CreateProductResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     }
                 }
@@ -279,14 +279,14 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/io_github_com_api-product_internal_dto.UserResponse"
+                                "$ref": "#/definitions/UserResponse"
                             }
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     }
                 }
@@ -309,7 +309,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_dto.UserRequest"
+                            "$ref": "#/definitions/UserRequest"
                         }
                     }
                 ],
@@ -317,19 +317,19 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_dto.UserResponse"
+                            "$ref": "#/definitions/UserResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     }
                 }
@@ -362,19 +362,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_dto.UserResponse"
+                            "$ref": "#/definitions/UserResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     }
                 }
@@ -411,7 +411,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_dto.UpdateEmailRequest"
+                            "$ref": "#/definitions/UpdateEmailRequest"
                         }
                     }
                 ],
@@ -419,31 +419,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_dto.UserResponse"
+                            "$ref": "#/definitions/UserResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     }
                 }
@@ -480,7 +480,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_dto.UpdateNameRequest"
+                            "$ref": "#/definitions/UpdateNameRequest"
                         }
                     }
                 ],
@@ -488,19 +488,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_dto.UserResponse"
+                            "$ref": "#/definitions/UserResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     }
                 }
@@ -537,7 +537,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_dto.UpdatePasswordRequest"
+                            "$ref": "#/definitions/UpdatePasswordRequest"
                         }
                     }
                 ],
@@ -545,31 +545,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_dto.UserResponse"
+                            "$ref": "#/definitions/UserResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     }
                 }
@@ -601,25 +601,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_dto.DesactivateUser"
+                            "$ref": "#/definitions/DesactivateUser"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/io_github_com_api-product_internal_utils.ApiError"
+                            "$ref": "#/definitions/Errors"
                         }
                     }
                 }
@@ -627,7 +627,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "io_github_com_api-product_internal_dto.CreateProduct": {
+        "CreateProduct": {
             "type": "object",
             "properties": {
                 "description": {
@@ -647,7 +647,7 @@ const docTemplate = `{
                 }
             }
         },
-        "io_github_com_api-product_internal_dto.CreateProductResponse": {
+        "CreateProductResponse": {
             "type": "object",
             "properties": {
                 "created_at": {
@@ -673,7 +673,7 @@ const docTemplate = `{
                 }
             }
         },
-        "io_github_com_api-product_internal_dto.DesactivateUser": {
+        "DesactivateUser": {
             "type": "object",
             "properties": {
                 "inactive_dt": {
@@ -684,7 +684,18 @@ const docTemplate = `{
                 }
             }
         },
-        "io_github_com_api-product_internal_dto.LoginRequest": {
+        "Errors": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
+        "LoginRequest": {
             "type": "object",
             "properties": {
                 "email": {
@@ -695,7 +706,7 @@ const docTemplate = `{
                 }
             }
         },
-        "io_github_com_api-product_internal_dto.LoginResponse": {
+        "LoginResponse": {
             "type": "object",
             "properties": {
                 "access_token": {
@@ -703,7 +714,7 @@ const docTemplate = `{
                 }
             }
         },
-        "io_github_com_api-product_internal_dto.UpdateEmailRequest": {
+        "UpdateEmailRequest": {
             "type": "object",
             "properties": {
                 "email": {
@@ -711,7 +722,7 @@ const docTemplate = `{
                 }
             }
         },
-        "io_github_com_api-product_internal_dto.UpdateNameRequest": {
+        "UpdateNameRequest": {
             "type": "object",
             "properties": {
                 "name": {
@@ -719,7 +730,7 @@ const docTemplate = `{
                 }
             }
         },
-        "io_github_com_api-product_internal_dto.UpdatePasswordRequest": {
+        "UpdatePasswordRequest": {
             "type": "object",
             "properties": {
                 "current_password": {
@@ -730,7 +741,7 @@ const docTemplate = `{
                 }
             }
         },
-        "io_github_com_api-product_internal_dto.UpdateProduct": {
+        "UpdateProduct": {
             "type": "object",
             "properties": {
                 "description": {
@@ -747,7 +758,7 @@ const docTemplate = `{
                 }
             }
         },
-        "io_github_com_api-product_internal_dto.UserRequest": {
+        "UserRequest": {
             "type": "object",
             "properties": {
                 "email": {
@@ -761,7 +772,7 @@ const docTemplate = `{
                 }
             }
         },
-        "io_github_com_api-product_internal_dto.UserResponse": {
+        "UserResponse": {
             "type": "object",
             "properties": {
                 "email": {
@@ -775,15 +786,6 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
-                }
-            }
-        },
-        "io_github_com_api-product_internal_utils.ApiError": {
-            "type": "object",
-            "properties": {
-                "message": {},
-                "status": {
-                    "type": "integer"
                 }
             }
         }

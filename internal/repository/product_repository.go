@@ -10,14 +10,17 @@ import (
 	"io.github.com/api-product/internal/utils"
 )
 
+// Encapsula o acesso a dados de produtos
 type ProductRepository struct {
 	queries *db.Queries
 }
 
+// Injeta as queries geradas pelo sqlc no repository
 func NewProductRepository(queries *db.Queries) *ProductRepository {
 	return &ProductRepository{queries: queries}
 }
 
+// Create insere um novo produto no banco retornando o produto já convertido para domain.Product
 func (r *ProductRepository) Create(ctx context.Context, product string, quantity int32,
 	price string, description *string, userID uuid.UUID) (domain.Product, error) {
 	row, err := r.queries.CreateProduct(ctx, db.CreateProductParams{
@@ -35,6 +38,7 @@ func (r *ProductRepository) Create(ctx context.Context, product string, quantity
 	return mapper.ToDomainProduct(row), nil
 }
 
+// UpdateProduct atualiza um produto existente pelo id e devolve convertido para domain.Product
 func (r *ProductRepository) UpdateProduct(ctx context.Context, id int32, name string,
 	quantity int32, price string, description *string) (domain.Product, error) {
 	row, err := r.queries.UpdateProduct(ctx, db.UpdateProductParams{
@@ -52,6 +56,7 @@ func (r *ProductRepository) UpdateProduct(ctx context.Context, id int32, name st
 	return mapper.ToDomainProduct(row), nil
 }
 
+// ProductById realiza a consulta por um id especifico
 func (r *ProductRepository) ProductById(ctx context.Context, id int32) (domain.Product, error) {
 	row, err := r.queries.ProductById(ctx, id)
 
@@ -62,6 +67,7 @@ func (r *ProductRepository) ProductById(ctx context.Context, id int32) (domain.P
 	return mapper.ToDomainProduct(row), nil
 }
 
+// AllProducts realiza a consulta de todos os produtos cadastrados
 func (r *ProductRepository) AllProducts(ctx context.Context) ([]domain.Product, error) {
 	rows, err := r.queries.ListAllProducts(ctx)
 	if err != nil {
@@ -75,6 +81,7 @@ func (r *ProductRepository) AllProducts(ctx context.Context) ([]domain.Product, 
 	return products, nil
 }
 
+// DeleteProduct remove um produto cadastrado pelo seu identificador
 func (r *ProductRepository) DeleteProduct(ctx context.Context, id int32) error {
 	err := r.queries.DeleteProduct(ctx, id)
 	if err != nil {

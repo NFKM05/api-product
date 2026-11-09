@@ -6,6 +6,8 @@ import (
 	"io.github.com/api-product/internal/utils"
 )
 
+// Converte um db.Product gerado pelo sqlc para domain.Product
+// Para não expor o tipo gerado pelo sqlc
 func ToDomainProduct(p db.Product) domain.Product {
 
 	return domain.Product{
@@ -20,6 +22,8 @@ func ToDomainProduct(p db.Product) domain.Product {
 	}
 }
 
+// Converte um db.User gerado pelo sqlc para domain.Product
+// Para não expor o tipo gerado pelo sqlc
 func ToDomainUser(u db.User) domain.User {
 	return domain.User{
 		ID:         u.ID,

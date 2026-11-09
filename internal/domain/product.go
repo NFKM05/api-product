@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// Struct que reflete os campos da tabela no banco de dados
 type Product struct {
 	ID          int32
 	ProductName string
@@ -19,6 +20,7 @@ type Product struct {
 	UpdatedAt   time.Time
 }
 
+// Função de regra de negócio que valida os campos obrigatórios
 func (p *Product) Validate() error {
 	if p.ProductName == "" {
 		return errors.New("product name is required")
@@ -35,6 +37,7 @@ func (p *Product) Validate() error {
 	return nil
 }
 
+// Função de regra de negócio que padroniza os campos para um formato apenas
 func (p *Product) Normalize() {
 	p.ProductName = strings.TrimSpace(p.ProductName)
 }
